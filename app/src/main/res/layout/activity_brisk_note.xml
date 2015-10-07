@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:orientation="vertical"
+
+    android:layout_width="fill_parent"
+
+    android:layout_height="fill_parent"
+
+    >
+
+    <TextView
+
+        android:layout_width="fill_parent"
+
+        android:layout_height="wrap_content"
+
+        android:text="Compose A BriskNote!"
+
+        />
+
+    <EditText
+
+        android:id="@+id/textbox"
+
+        android:singleLine="false"
+
+        android:gravity="top"
+
+        android:lines="10"
+
+        android:layout_width="fill_parent"
+
+        android:layout_height="wrap_content"/>
+
+
+    <Button android:id="@+id/save"
+
+        android:layout_width="fill_parent"
+
+        android:layout_height="wrap_content"
+
+        android:text="Save Note"
+
+        android:onClick="saveClicked"/>
+
+    <Button android:id="@+id/prev"
+
+        android:layout_width="fill_parent"
+
+        android:layout_height="wrap_content"
+
+        android:text="Open Past Note"
+
+        android:onClick="pastNotes"/>
+
+</LinearLayout>
