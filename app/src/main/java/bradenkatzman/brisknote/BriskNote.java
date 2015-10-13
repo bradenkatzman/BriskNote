@@ -16,8 +16,6 @@ import java.io.OutputStreamWriter;
 
 public class BriskNote extends AppCompatActivity {
 
-    private final static String STORETEXT="BriskNote.txt";
-
     private String firstWord;
 
     private final static String txt = ".txt"; //appended to first characters of note
@@ -28,11 +26,22 @@ public class BriskNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_brisk_note);
+//        setContentView(R.layout.activity_brisk_note);
+//
+//        txtEditor=(EditText)findViewById(R.id.textbox);
 
-        txtEditor=(EditText)findViewById(R.id.textbox);
+        //get intent to check if opening past note
+        Intent intent = getIntent();
+        String fileName = intent.getStringExtra("file");
 
-        readFileInEditor();
+        if(intent == null) { //opening view
+            setContentView(R.layout.activity_brisk_note);
+            txtEditor=(EditText)findViewById(R.id.textbox);
+        }
+        else { //opening past note
+            Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG);
+            readFileInEditor(fileName);
+        }
     }
 
     @Override
@@ -108,13 +117,13 @@ public class BriskNote extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void readFileInEditor()
+    public void readFileInEditor(String fileName)
 
     {
 
         try {
 
-            InputStream in = openFileInput("hello.txt");
+            InputStream in = openFileInput(fileName);
 
             if (in != null) {
 
