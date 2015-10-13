@@ -11,25 +11,29 @@ import java.io.File;
 
 public class PastNotesList extends AppCompatActivity {
 
+    private File currentDirectory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_notes_list);
 
         //get the directory that stores the .xt files
-        File f = this.getFilesDir();
-
-        //make array of file names to list
-        String files = "";
-        File file[] = f.listFiles();
-        Log.d("Files", "Size: " + file.length);
-        for (int i = 0; i < file.length; ++i) {
-            files += file[i].getName();
-            files += ", ";
-        }
-        Toast.makeText(this, files, Toast.LENGTH_LONG).show();
+        currentDirectory = this.getFilesDir();
+        fill(currentDirectory);
     }
 
+        private void fill(File f) {
+            //make array of file names to list
+            String files = "";
+            File file[] = f.listFiles();
+            Log.d("Files", "Size: " + file.length);
+            for (int i = 0; i < file.length; ++i) {
+                files += file[i].getName();
+                files += ", ";
+            }
+            Toast.makeText(this, files, Toast.LENGTH_LONG).show();
+        }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
