@@ -1,5 +1,6 @@
 package bradenkatzman.brisknote;
 
+import android.app.ListActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,8 +9,11 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public class PastNotesList extends AppCompatActivity {
+public class PastNotesList extends ListActivity { //AppCompatActivity
 
     private File currentDirectory;
 
@@ -24,15 +28,28 @@ public class PastNotesList extends AppCompatActivity {
     }
 
         private void fill(File f) {
-            //make array of file names to list
-            String files = "";
-            File file[] = f.listFiles();
-            Log.d("Files", "Size: " + file.length);
-            for (int i = 0; i < file.length; ++i) {
-                files += file[i].getName();
-                files += ", ";
+//            //make array of file names to list
+//            String files = "";
+//            File file[] = f.listFiles();
+//            Log.d("Files", "Size: " + file.length);
+//            for (int i = 0; i < file.length; ++i) {
+//                files += file[i].getName();
+//                files += ", ";
+//            }
+//            Toast.makeText(this, files, Toast.LENGTH_LONG).show();
+
+            File[] files = f.listFiles();
+            List<Option> fls = new ArrayList<Option>();
+            try {
+                for (File ff: files) {
+                    fls.add(new Option(ff.getName(), "File Size: " + ff.length(), ff.getAbsolutePath()));
+                }
             }
-            Toast.makeText(this, files, Toast.LENGTH_LONG).show();
+            catch (Exception e) {
+
+            }
+
+            Collections.sort(fls); //sort the files in the ArrayList
         }
 
     @Override
