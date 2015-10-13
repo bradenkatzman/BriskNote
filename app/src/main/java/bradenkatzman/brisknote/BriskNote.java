@@ -18,7 +18,7 @@ public class BriskNote extends AppCompatActivity {
 
     private String firstWord;
 
-    private final static String txt = ".txt"; //appended to first characters of note
+    private final static String ext = ".txt"; //appended to first characters of note
 
     private EditText txtEditor;
 
@@ -26,44 +26,20 @@ public class BriskNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        setContentView(R.layout.activity_brisk_note);
-//
-//        txtEditor=(EditText)findViewById(R.id.textbox);
-
         //get intent to check if opening past note
-        Intent intent = getIntent();
-        String fileName = intent.getStringExtra("file");
-
-        if(intent == null) { //opening view
+        if(getIntent().getExtras() != null) { //opening past note
+            Intent intent = getIntent();
+            String fileName = intent.getStringExtra("fileName");
+            Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG).show();
+            setContentView(R.layout.activity_brisk_note);
+            txtEditor=(EditText)findViewById(R.id.textbox);
+            readFileInEditor(fileName);
+        }
+        else { //opening view
+            Toast.makeText(this, "BriskNote starting...", Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_brisk_note);
             txtEditor=(EditText)findViewById(R.id.textbox);
         }
-        else { //opening past note
-            Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG);
-            readFileInEditor(fileName);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_brisk_note, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void saveClicked(View v) {
@@ -84,11 +60,8 @@ public class BriskNote extends AppCompatActivity {
                 }
             }
 
-            Toast.makeText(this, note, Toast.LENGTH_LONG).show();
-
-
             //construct file name
-            firstWord += txt;
+            firstWord += ext;
 
             OutputStreamWriter out= new OutputStreamWriter(openFileOutput(firstWord, 0));
 
@@ -111,6 +84,8 @@ public class BriskNote extends AppCompatActivity {
     }
 
     public void pastNotes(View v) {
+        Toast.makeText(this, "Opening past notes...", Toast.LENGTH_LONG).show();
+
         //create an Intent to start a new activity
         Intent intent = new Intent(this, PastNotesList.class);
 
@@ -149,21 +124,33 @@ public class BriskNote extends AppCompatActivity {
 
         }
 
-        catch (java.io.FileNotFoundException e) {
-
-// that's OK, we probably haven't created it yet
-
-        }
+        catch (java.io.FileNotFoundException e) {}
 
         catch (Throwable t) {
-
-            Toast
-
-                    .makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG)
-
-                    .show();
-
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_brisk_note, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
