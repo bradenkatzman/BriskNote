@@ -7,6 +7,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.List;
 public class PastNotesList extends ListActivity { //AppCompatActivity
 
     private File currentDirectory;
+    private FileArrayAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,9 @@ public class PastNotesList extends ListActivity { //AppCompatActivity
             }
 
             Collections.sort(fls); //sort the files in the ArrayList
+
+            //create file adapter for collection
+            adapter = new FileArrayAdapter(PastNotesList.this, R.layout.activity_past_notes_list, fls);
         }
 
     @Override
