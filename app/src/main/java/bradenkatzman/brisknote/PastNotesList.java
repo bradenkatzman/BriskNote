@@ -84,12 +84,6 @@ public class PastNotesList extends AppCompatActivity {
     }
 
 
-
-//    //create an Intent to start a new activity
-//    Intent intent = new Intent(this, PastNotesList.class);
-//
-//    startActivity(intent);
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

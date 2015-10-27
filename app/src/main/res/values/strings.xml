@@ -4,4 +4,5 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_past_notes_list">Past Notes</string>
     <string name="choose_note">Choose a Past Note to Edit</string>
+    <string name="open_note">Open a Note Using Deep Link</string>
 </resources>

@@ -26,10 +26,24 @@ public class BriskNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //get intent to check if opening past note
-        if(getIntent().getExtras() != null) { //opening past note
+        //get intent to check if opening past note or deep link
+        if(getIntent().getExtras() != null) { //opening note
             Intent intent = getIntent();
-            String fileName = intent.getStringExtra("fileName");
+            String fileName;
+
+            //let's check if this is coming from a deep link
+            String action = intent.getAction();
+            String data = intent.getDataString();
+            if(Intent.ACTION_VIEW.equals(action) && data != null) {
+                Toast.makeText(this, "processing deep link...", Toast.LENGTH_LONG).show();
+                //extract file name
+                fileName = data.substring(data.lastIndexOf("/") + 1);
+            }
+            else  { //opening note from Past Notes view
+                Toast.makeText(this, "Opening file from Past Notes View", Toast.LENGTH_LONG).show();
+                fileName = intent.getStringExtra("fileName");
+            }
+
             Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_brisk_note);
             txtEditor=(EditText)findViewById(R.id.textbox);
@@ -42,10 +56,10 @@ public class BriskNote extends AppCompatActivity {
         }
     }
 
+    //saves the note in the text editor, writes to output file
     public void saveClicked(View v) {
 
         try {
-
             //find the first word in the note to be used as the title
             String note = txtEditor.getText().toString();
             if(note.contains(" ")) {
@@ -69,11 +83,7 @@ public class BriskNote extends AppCompatActivity {
 
             out.close();
 
-            Toast
-
-                    .makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_LONG)
-
-                    .show();
+            Toast.makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_LONG).show();
 
         }
 
@@ -83,6 +93,7 @@ public class BriskNote extends AppCompatActivity {
 
     }
 
+    //opens past notes view to select .txt files
     public void pastNotes(View v) {
         Toast.makeText(this, "Opening past notes...", Toast.LENGTH_LONG).show();
 
@@ -92,6 +103,24 @@ public class BriskNote extends AppCompatActivity {
         startActivity(intent);
     }
 
+
+    //send note data to other app
+    public void sendText(View v) {
+        String note = txtEditor.getText().toString();
+        sendNote(note);
+    }
+
+    private void sendNote(String note) {
+        Toast.makeText(this, "sending text to other apps...", Toast.LENGTH_LONG).show();
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND); //will identify compatible receiving activities
+        sendIntent.putExtra("data", note);
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, "Send Note To Other App:"));
+    }
+
+
+    //this method reads files that are passed as intents from the past notes list
     public void readFileInEditor(String fileName)
 
     {
@@ -124,7 +153,9 @@ public class BriskNote extends AppCompatActivity {
 
         }
 
-        catch (java.io.FileNotFoundException e) {}
+        catch (java.io.FileNotFoundException e) {
+            Toast.makeText(this, "Exception: the file was not found on the system", Toast.LENGTH_LONG).show();
+        }
 
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
