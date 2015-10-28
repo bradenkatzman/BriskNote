@@ -34,26 +34,40 @@ public class BriskNote extends AppCompatActivity {
             //let's check if this is coming from a deep link
             String action = intent.getAction();
             String data = intent.getDataString();
-            if(Intent.ACTION_VIEW.equals(action) && data != null) {
+            if(Intent.ACTION_VIEW.equals(action) && data != null) { //a deep link
                 Toast.makeText(this, "processing deep link...", Toast.LENGTH_LONG).show();
                 //extract file name
                 fileName = data.substring(data.lastIndexOf("/") + 1);
+                if (fileName == null) { //opening the app for a new note
+                    initializeNewNote();
+                }
+                else {
+                    initializeWithFile(fileName);
+                }
             }
             else  { //opening note from Past Notes view
                 Toast.makeText(this, "Opening file from Past Notes View", Toast.LENGTH_LONG).show();
                 fileName = intent.getStringExtra("fileName");
+                initializeWithFile(fileName);
             }
 
-            Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG).show();
-            setContentView(R.layout.activity_brisk_note);
-            txtEditor=(EditText)findViewById(R.id.textbox);
-            readFileInEditor(fileName);
         }
         else { //opening view
-            Toast.makeText(this, "BriskNote starting...", Toast.LENGTH_LONG).show();
-            setContentView(R.layout.activity_brisk_note);
-            txtEditor=(EditText)findViewById(R.id.textbox);
+            initializeNewNote();
         }
+    }
+
+    public void initializeNewNote() {
+        Toast.makeText(this, "BriskNote starting...", Toast.LENGTH_LONG).show();
+        setContentView(R.layout.activity_brisk_note);
+        txtEditor=(EditText)findViewById(R.id.textbox);
+    }
+
+    public void initializeWithFile(String fileName) {
+        Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG).show();
+        setContentView(R.layout.activity_brisk_note);
+        txtEditor=(EditText)findViewById(R.id.textbox);
+        readFileInEditor(fileName);
     }
 
     //saves the note in the text editor, writes to output file
