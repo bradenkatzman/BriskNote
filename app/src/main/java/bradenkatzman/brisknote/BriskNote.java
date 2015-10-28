@@ -17,9 +17,7 @@ import java.io.OutputStreamWriter;
 public class BriskNote extends AppCompatActivity {
 
     private String firstWord;
-
     private final static String ext = ".txt"; //appended to first characters of note
-
     private EditText txtEditor;
 
     @Override
@@ -38,7 +36,7 @@ public class BriskNote extends AppCompatActivity {
                 Toast.makeText(this, "processing deep link...", Toast.LENGTH_LONG).show();
                 //extract file name
                 fileName = data.substring(data.lastIndexOf("/") + 1);
-                if (fileName == null) { //opening the app for a new note
+                if (fileName.equals(".txt")) { //opening the app for a new note
                     initializeNewNote();
                 }
                 else {
@@ -70,9 +68,8 @@ public class BriskNote extends AppCompatActivity {
         readFileInEditor(fileName);
     }
 
-    //saves the note in the text editor, writes to output file
+    //saves the note in the text editor, writes to output files
     public void saveClicked(View v) {
-
         try {
             //find the first word in the note to be used as the title
             String note = txtEditor.getText().toString();
@@ -87,7 +84,6 @@ public class BriskNote extends AppCompatActivity {
                     firstWord = note.substring(0, 4);
                 }
             }
-
             //construct file name
             firstWord += ext;
 
@@ -100,7 +96,6 @@ public class BriskNote extends AppCompatActivity {
             Toast.makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_LONG).show();
 
         }
-
         catch (Throwable t) {
             Toast.makeText(this, "Exception: "+t.toString(), Toast.LENGTH_LONG).show();
         }
@@ -135,16 +130,10 @@ public class BriskNote extends AppCompatActivity {
 
 
     //this method reads files that are passed as intents from the past notes list
-    public void readFileInEditor(String fileName)
-
-    {
-
+    public void readFileInEditor(String fileName) {
         try {
-
             InputStream in = openFileInput(fileName);
-
             if (in != null) {
-
                 InputStreamReader tmp=new InputStreamReader(in);
 
                 BufferedReader reader=new BufferedReader(tmp);
@@ -154,27 +143,20 @@ public class BriskNote extends AppCompatActivity {
                 StringBuilder buf=new StringBuilder();
 
                 while ((str = reader.readLine()) != null) {
-
                     buf.append(str+"\n");
-
                 }
 
                 in.close();
 
                 txtEditor.setText(buf.toString());
-
             }
-
         }
-
         catch (java.io.FileNotFoundException e) {
             Toast.makeText(this, "Exception: the file was not found on the system", Toast.LENGTH_LONG).show();
         }
-
         catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
-
     }
 
     @Override
