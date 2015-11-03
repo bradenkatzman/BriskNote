@@ -3,12 +3,13 @@ package bradenkatzman.brisknote;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,6 +25,16 @@ public class BriskNote extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /*
+            CREATE GESTURE DETECTION
+         */
+        //save current view
+        View rootView = this.findViewById(android.R.id.content).getRootView();
+        GestureDetection gD = new GestureDetection(rootView.getContext(),
+                (AttributeSet) rootView.getLayoutParams());
+        /* THIS SHOULD ADD DOUBLE TAP FUNCTIONALITY TO OUR APP */
+
+
         //get intent to check if opening past note or deep link
         if(getIntent().getExtras() != null) { //opening note
             Intent intent = getIntent();
@@ -33,7 +44,7 @@ public class BriskNote extends AppCompatActivity {
             String action = intent.getAction();
             String data = intent.getDataString();
             if(Intent.ACTION_VIEW.equals(action) && data != null) { //a deep link
-                Toast.makeText(this, "processing deep link...", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "processing deep link...", Toast.LENGTH_SHORT).show();
                 //extract file name
                 fileName = data.substring(data.lastIndexOf("/") + 1);
                 if (fileName.equals(".txt")) { //opening the app for a new note
@@ -44,7 +55,7 @@ public class BriskNote extends AppCompatActivity {
                 }
             }
             else  { //opening note from Past Notes view
-                Toast.makeText(this, "Opening file from Past Notes View", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Opening file from Past Notes View", Toast.LENGTH_SHORT).show();
                 fileName = intent.getStringExtra("fileName");
                 initializeWithFile(fileName);
             }
@@ -56,13 +67,13 @@ public class BriskNote extends AppCompatActivity {
     }
 
     public void initializeNewNote() {
-        Toast.makeText(this, "BriskNote starting...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "BriskNote starting...", Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_brisk_note);
         txtEditor=(EditText)findViewById(R.id.textbox);
     }
 
     public void initializeWithFile(String fileName) {
-        Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Opening file: " + fileName, Toast.LENGTH_SHORT).show();
         setContentView(R.layout.activity_brisk_note);
         txtEditor=(EditText)findViewById(R.id.textbox);
         readFileInEditor(fileName);
@@ -93,18 +104,18 @@ public class BriskNote extends AppCompatActivity {
 
             out.close();
 
-            Toast.makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_SHORT).show();
 
         }
         catch (Throwable t) {
-            Toast.makeText(this, "Exception: "+t.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Exception: "+t.toString(), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     //opens past notes view to select .txt files
     public void pastNotes(View v) {
-        Toast.makeText(this, "Opening past notes...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Opening past notes...", Toast.LENGTH_SHORT).show();
 
         //create an Intent to start a new activity
         Intent intent = new Intent(this, PastNotesList.class);
@@ -120,7 +131,7 @@ public class BriskNote extends AppCompatActivity {
     }
 
     private void sendNote(String note) {
-        Toast.makeText(this, "sending text to other apps...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "sending text to other apps...", Toast.LENGTH_SHORT).show();
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND); //will identify compatible receiving activities
         sendIntent.putExtra("data", note);
@@ -152,10 +163,10 @@ public class BriskNote extends AppCompatActivity {
             }
         }
         catch (java.io.FileNotFoundException e) {
-            Toast.makeText(this, "Exception: the file was not found on the system", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Exception: the file was not found on the system", Toast.LENGTH_SHORT).show();
         }
         catch (Throwable t) {
-            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
