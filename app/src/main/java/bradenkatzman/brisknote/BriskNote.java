@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -21,6 +22,11 @@ public class BriskNote extends AppCompatActivity {
     private final static String ext = ".txt"; //appended to first characters of note
     private EditText txtEditor;
 
+    //this detects double tap for sharing purposes
+    GestureDetection gD;
+
+    private static View rootView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,10 +35,29 @@ public class BriskNote extends AppCompatActivity {
             CREATE GESTURE DETECTION
          */
         //save current view
-        View rootView = this.findViewById(android.R.id.content).getRootView();
-        GestureDetection gD = new GestureDetection(rootView.getContext(),
+        rootView = this.findViewById(android.R.id.content).getRootView();
+
+        //set listener for taps, implement on touch method that accesses gesture detection class
+        gD = new GestureDetection(rootView.getContext(),
                 (AttributeSet) rootView.getLayoutParams());
-        /* THIS SHOULD ADD DOUBLE TAP FUNCTIONALITY TO OUR APP */
+
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("tap detected - ","sending to gesture detection");
+
+                boolean result = gD.onTouchEvent(event); //fire the gesture detection method
+
+                if (result == true) {
+                    //gesture detected
+                    sendText(rootView);
+                }
+
+                return result;
+            }
+        });
+
+        /* END GESTURE DETECTION SEGMENT */
 
 
         //get intent to check if opening past note or deep link
@@ -105,6 +130,7 @@ public class BriskNote extends AppCompatActivity {
             out.close();
 
             Toast.makeText(this, "The contents are saved in the file:" + firstWord, Toast.LENGTH_SHORT).show();
+            Log.d("saved file: ", firstWord);
 
         }
         catch (Throwable t) {
